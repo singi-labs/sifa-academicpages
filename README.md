@@ -10,6 +10,8 @@ Inspired by [academicpages.github.io](https://academicpages.github.io/), the pop
 
 The build script fetches the Markdown export of your profile from `https://sifa.id/p/<handle>.md`, splits it into sections, and renders each section as its own HTML page with a shared layout and stylesheet. Empty sections are dropped automatically.
 
+The rendering logic lives in [`@singi-labs/academicpages-renderer`](https://github.com/singi-labs/academicpages-renderer) -- this repo is the self-hosting scaffold that fetches data and writes static files.
+
 ## Use
 
 ```bash
@@ -28,6 +30,17 @@ Set `SIFA_HANDLE` (or `SIFA_DID`) to your Sifa handle. Set `SIFA_BASE` to point 
 ## Deploy
 
 `dist/` is plain static HTML and CSS. Deploy it anywhere: GitHub Pages, Netlify, Cloudflare Pages, or your own server. Rebuild on push or on a schedule so the site picks up profile edits.
+
+## Using the renderer programmatically
+
+The `@singi-labs/academicpages-renderer` package is framework-agnostic -- import it from any Node.js script, Next.js Route Handler, or SSG:
+
+```javascript
+import { parseSections, renderHome, renderSectionPage } from '@singi-labs/academicpages-renderer';
+import { CSS } from '@singi-labs/academicpages-renderer/style';
+```
+
+See the [package README](https://github.com/singi-labs/academicpages-renderer) for the full API.
 
 ## Status
 
