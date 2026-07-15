@@ -8,7 +8,10 @@
     "dev": "node build.mjs && npx --yes serve dist"
   },
   "dependencies": {
-    "@singi-labs/sifa-sdk": "0.12.0",
-    "marked": "16.4.0"
+    "@singi-labs/academicpages-renderer": "singi-labs/academicpages-renderer",
+    "@singi-labs/sifa-sdk": "0.12.0"
+  },
+  "allowScripts": {
+    "github:singi-labs/academicpages-renderer#7151d8ab41ed032952063030a9d173d46f659c72": true
   }
 }

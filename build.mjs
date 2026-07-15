@@ -2,27 +2,21 @@
 /**
  * sifa-academicpages build script (Node harness).
  *
- * The rendering lives in render.mjs as PURE functions (no fs, no fetch) so the
- * SAME renderer can be imported by the sifa-web `/academic` route at request
- * time -> one codebase, two hosting models. Difference: here the handle comes
- * from config; on sifa.id it comes from the route.
+ * The renderer is published as @singi-labs/academicpages-renderer -- pure
+ * functions (no fs, no fetch) importable by any Node.js script, Next.js Route
+ * Handler, or SSG. This repo is the self-hosting scaffold: it fetches data
+ * from sifa.id and writes static HTML + assets to dist/.
  *
  * Hybrid data (both public, unauthenticated):
  *   - SDK fetchProfile  -> structured identity (avatar, name, links, verifiedAccounts)
  *   - /p/{handle}.md    -> section bodies, already formatted by Sifa's shared model
- *
- * Why hybrid: the section formatters + section model still live in sifa-web, not
- * the SDK, so fully-structured sections would duplicate them. The SDK gives the
- * structured identity the sidebar needs; .md gives drift-free section content.
- * Moving the section model + formatters into the SDK is the follow-up that makes
- * the whole thing structured.
  */
 
 import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { cpSync } from 'node:fs';
 import { fetchProfile } from '@singi-labs/sifa-sdk/query/fetchers';
-import { parseSections, renderHome, renderSectionPage, sectionSlug, isSidebarOnly } from './render.mjs';
-import { CSS } from './style.mjs';
+import { parseSections, renderHome, renderSectionPage, sectionSlug, isSidebarOnly } from '@singi-labs/academicpages-renderer';
+import { CSS } from '@singi-labs/academicpages-renderer/style';
 
 const HANDLE = process.env.SIFA_HANDLE ?? process.env.SIFA_DID ?? 'ronentk.me';
 const SIFA_BASE = process.env.SIFA_BASE ?? 'https://sifa.id';
