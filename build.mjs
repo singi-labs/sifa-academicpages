@@ -37,6 +37,32 @@ const config = { baseUrl: SIFA_BASE };
 const now = new Date();
 const ctx = { year: now.getFullYear(), updated: now.toISOString().slice(0, 10) };
 
+/**
+ * Canonical + social metadata, mirroring sifa-web's `/site` route so a link
+ * shared from this site previews identically to one shared from page.sifa.id.
+ *
+ * Canonical (and og:url with it) points at the Sifa profile page rather than
+ * this site: ranking signal consolidates there instead of diluting across
+ * self-hosted copies of the same profile. The card is the same profile image
+ * sifa.id renders. Self-hosters who want their own domain to be the canonical
+ * one can change both here.
+ */
+function seoCtx(profile, handle) {
+  const canonical = `${SIFA_BASE}/p/${handle}`;
+  const displayName = profile.displayName ?? handle;
+  return {
+    canonical,
+    og: {
+      title: profile.displayName ? `${profile.displayName} (@${handle})` : handle,
+      description: `${displayName}'s personal site on Sifa.`,
+      url: canonical,
+      image: `${SIFA_BASE}/p/${encodeURIComponent(handle)}/site/card`,
+      siteName: 'Sifa',
+      type: 'profile',
+    },
+  };
+}
+
 async function main() {
   console.log(`Building site for "${SIFA_ID}" from ${SIFA_BASE}...`);
   // Resolve the profile from the configured identifier (fetchProfile takes a DID
@@ -47,10 +73,10 @@ async function main() {
     throw new Error(`No public profile for "${SIFA_ID}" (404 on the SDK profile).`);
   }
   const handle = profile.handle ?? (SIFA_ID.startsWith('did:') ? null : SIFA_ID);
-  // Default canonical -> the main Sifa profile page, so ranking signal
-  // consolidates on sifa.id rather than diluting across this self-hosted copy.
-  // (Self-hosters who want their own domain canonical can change this.)
-  const renderCtx = handle ? { ...ctx, canonical: `${SIFA_BASE}/p/${handle}` } : ctx;
+  // Without a resolvable handle there is no profile URL to point at, so the
+  // build stays on the bare footer context rather than emitting a broken
+  // canonical and an empty card.
+  const renderCtx = handle ? { ...ctx, ...seoCtx(profile, handle) } : ctx;
   const sections = buildProfileSections(profile);
   console.log(`  ${profile.displayName ?? handle ?? SIFA_ID} | avatar: ${profile.avatar ? 'yes' : 'no'}`);
   console.log(`  sections: ${sections.length} (${sections.map((s) => s.title).join(', ') || 'none'})`);
