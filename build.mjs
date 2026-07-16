@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * sifa-academicpages build script (Node harness).
+ * sifa-page build script (Node harness).
  *
- * The renderer is published as @singi-labs/academicpages-renderer -- pure
+ * The renderer is published as @singi-labs/sifa-page-renderer -- pure
  * functions (no fs, no fetch) importable by any Node.js script, Next.js Route
  * Handler, or SSG. This repo is the self-hosting scaffold: it fetches data
  * from sifa.id and writes static HTML + assets to dist/.
@@ -16,8 +16,8 @@
 import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { cpSync } from 'node:fs';
 import { fetchProfile } from '@singi-labs/sifa-sdk/query/fetchers';
-import { buildProfileSections, renderHome, renderSectionPage } from '@singi-labs/academicpages-renderer';
-import { CSS } from '@singi-labs/academicpages-renderer/style';
+import { buildProfileSections, renderHome, renderSectionPage } from '@singi-labs/sifa-page-renderer';
+import { CSS } from '@singi-labs/sifa-page-renderer/style';
 
 // Identity input. Accepts EITHER a DID or a handle and prefers the DID: a DID
 // (did:plc:..., did:web:...) is permanent, a handle is not. Anchoring the build
