@@ -47,6 +47,10 @@ async function main() {
     throw new Error(`No public profile for "${SIFA_ID}" (404 on the SDK profile).`);
   }
   const handle = profile.handle ?? (SIFA_ID.startsWith('did:') ? null : SIFA_ID);
+  // Default canonical -> the main Sifa profile page, so ranking signal
+  // consolidates on sifa.id rather than diluting across this self-hosted copy.
+  // (Self-hosters who want their own domain canonical can change this.)
+  const renderCtx = handle ? { ...ctx, canonical: `${SIFA_BASE}/p/${handle}` } : ctx;
   const sections = buildProfileSections(profile);
   console.log(`  ${profile.displayName ?? handle ?? SIFA_ID} | avatar: ${profile.avatar ? 'yes' : 'no'}`);
   console.log(`  sections: ${sections.length} (${sections.map((s) => s.title).join(', ') || 'none'})`);
@@ -56,11 +60,11 @@ async function main() {
   cpSync('fonts', `${OUT}/fonts`, { recursive: true });
   cpSync('assets', `${OUT}/assets`, { recursive: true });
 
-  await writeFile(`${OUT}/index.html`, renderHome(profile, sections, ctx));
+  await writeFile(`${OUT}/index.html`, renderHome(profile, sections, renderCtx));
   let pages = 1;
   for (const section of sections) {
     if (section.slug === 'index') continue; // About is shown on the home page
-    await writeFile(`${OUT}/${section.slug}.html`, renderSectionPage(profile, section, sections, ctx));
+    await writeFile(`${OUT}/${section.slug}.html`, renderSectionPage(profile, section, sections, renderCtx));
     pages++;
   }
   await writeFile(`${OUT}/style.css`, CSS);
