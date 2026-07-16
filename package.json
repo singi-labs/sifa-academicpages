@@ -1,14 +1,14 @@
 {
-  "name": "sifa-academicpages",
+  "name": "sifa-page",
   "version": "0.1.0",
-  "description": "A personal academic website generated from your Sifa profile data.",
+  "description": "A personal website generated from your Sifa profile data.",
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
     "dev": "node build.mjs && npx --yes serve dist"
   },
   "dependencies": {
-    "@singi-labs/academicpages-renderer": "0.2.7",
+    "@singi-labs/sifa-page-renderer": "0.2.8",
     "@singi-labs/sifa-sdk": "0.12.1"
   }
 }
