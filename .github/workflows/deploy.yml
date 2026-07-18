@@ -25,11 +25,12 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # The identifier this demo site renders. SIFA_ID accepts either a DID
-          # or a handle; a DID is preferred since it survives handle changes.
-          # Override with a repo variable: SIFA_DEMO_ID (DID or handle) is the
-          # recommended one; SIFA_DEMO_HANDLE stays supported for backward compat.
-          SIFA_ID: ${{ vars.SIFA_DEMO_ID || vars.SIFA_DEMO_HANDLE || 'gui.do' }}
+          # The identifier this site renders. SIFA_ID accepts either a DID or a
+          # handle; a DID is preferred since it survives handle changes. Fork
+          # this repo and set a `SIFA_ID` repository variable to publish your own
+          # profile. SIFA_DEMO_ID / SIFA_DEMO_HANDLE stay supported for the
+          # canonical demo deployment and for backward compat.
+          SIFA_ID: ${{ vars.SIFA_ID || vars.SIFA_DEMO_ID || vars.SIFA_DEMO_HANDLE || 'gui.do' }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

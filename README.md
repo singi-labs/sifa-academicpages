@@ -43,6 +43,23 @@ For backward compatibility, `SIFA_DID` and `SIFA_HANDLE` are still read (in that
 
 `dist/` is plain static HTML and CSS. Deploy it anywhere: GitHub Pages, Netlify, Cloudflare Pages, or your own server. Rebuild on push or on a schedule so the site picks up profile edits.
 
+### Publish to GitHub Pages (no local build)
+
+This repo ships a GitHub Actions workflow ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)) that builds the site and publishes it to GitHub Pages on every push. To host your own profile this way:
+
+1. **Fork** this repo to your account.
+2. In your fork, go to **Settings → Secrets and variables → Actions → Variables** and add a repository variable named `SIFA_ID` set to your Sifa **DID** (`did:plc:...`). A handle works too, but a DID survives handle changes (see above).
+3. Go to **Settings → Pages** and set **Source** to **GitHub Actions**.
+4. Run the workflow: **Actions → Deploy site → Run workflow**, or just push a commit. Your site publishes at `https://<your-username>.github.io/<repo-name>/`.
+
+Profile edits show up the next time the workflow runs. To keep the site current automatically, add a `schedule:` trigger to the workflow (a daily cron, for example) so it rebuilds without a push.
+
+### Use your own domain
+
+GitHub Pages supports custom domains. In your fork, go to **Settings → Pages → Custom domain**, enter your domain (`cv.alice.com`), and add the DNS record GitHub asks for at your DNS provider: a `CNAME` to `<your-username>.github.io` for a subdomain, or the Pages apex records for a root domain. GitHub's [custom-domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site) list the exact records. Once it verifies, your site serves from your domain over HTTPS.
+
+This is the domain your website is served from, separate from your [Sifa handle domain](https://docs.sifa.id/docs/use-your-own-domain).
+
 ## Using the renderer programmatically
 
 The `@singi-labs/sifa-page-renderer` package is framework-agnostic -- import it from any Node.js script, Next.js Route Handler, or SSG:
